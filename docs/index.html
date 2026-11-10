@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tu agente de reels virales con Claude Code (guía gratis)</title>
+<meta name="description" content="Cómo hacer que Claude Code estudie los reels que más pegan en tu nicho: descargarlos, transcribirlos, verlos cuadro por cuadro, desarmarlos en formatos y crear un agente que te escriba los tuyos.">
+<meta property="og:title" content="Así Claude estudia los reels virales de tu nicho">
+<meta property="og:description" content="El paso a paso para tener tu agente de reels virales. Gratis, en español.">
+<meta property="og:image" content="https://diegodoc1111.github.io/agente-reels-virales/img/og.jpg">
+<meta property="og:url" content="https://diegodoc1111.github.io/agente-reels-virales/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fondo: #EEE8DB; --tinta: #1F1D1A; --texto: #3A3733; --suave: #6E6A63;
+    --terra: #D9774F; --terra-osc: #B85C37; --rosa: #F6DED5; --carta: #FBF8F2; --linea: #E0D8C8; --term: #1E1C1A;
+    --serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+    --sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--fondo); color: var(--texto); font: 17px/1.6 var(--sans); }
+  main { max-width: 720px; margin: 0 auto; padding: 32px 22px 64px; }
+  .cabeza { display: flex; align-items: flex-end; gap: 18px; margin: 8px 0 18px; }
+  .cabeza img { width: 92px; height: auto; image-rendering: pixelated; flex: none; }
+  .etiqueta { display: inline-block; font: 600 13px/1 var(--mono); letter-spacing: .08em; color: var(--terra-osc); background: var(--rosa); padding: 8px 12px; border-radius: 999px; }
+  h1 { font: 400 clamp(40px, 8.5vw, 62px)/1.02 var(--serif); color: var(--tinta); margin: 14px 0 14px; letter-spacing: -.01em; }
+  h1 em, h2 em { color: var(--terra); }
+  .bajada { font-size: 19px; margin: 0 0 22px; } .bajada strong { color: var(--tinta); }
+  .foto { display: block; width: 100%; height: auto; border-radius: 16px; border: 1px solid var(--linea); box-shadow: 0 10px 30px rgba(30,20,15,.18); margin: 0 0 10px; }
+  .pie { font-size: 14px; color: var(--suave); margin: 0 0 24px; }
+  .avisos { display: grid; gap: 10px; margin: 0 0 34px; padding: 0; list-style: none; }
+  .avisos li { background: var(--carta); border: 1px solid var(--linea); border-radius: 14px; padding: 12px 16px; font-size: 15.5px; }
+  .avisos li b { color: var(--tinta); }
+  .paso { position: relative; margin: 0 0 30px; padding: 22px 20px 20px; background: var(--carta); border: 1px solid var(--linea); border-radius: 20px; }
+  .num { position: absolute; top: -16px; left: 18px; width: 36px; height: 36px; border-radius: 50%; background: var(--terra); color: #fff; font: 700 17px/36px var(--sans); text-align: center; box-shadow: 0 2px 0 var(--terra-osc); }
+  h2 { font: 400 30px/1.15 var(--serif); color: var(--tinta); margin: 8px 0 10px; }
+  h3 { font: 700 16px/1.3 var(--sans); color: var(--tinta); margin: 18px 0 6px; }
+  .paso p { margin: 0 0 12px; } .paso p:last-child { margin-bottom: 0; }
+  .paso ol, .paso ul { margin: 0 0 12px; padding-left: 22px; } .paso li { margin: 5px 0; }
+  a { color: var(--terra-osc); text-underline-offset: 3px; }
+  .boton { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 14px 0 12px; padding: 16px 20px; border-radius: 999px; background: var(--terra); color: #fff; text-decoration: none; font: 700 18px/1.2 var(--sans); box-shadow: 0 3px 0 var(--terra-osc); border: 0; width: 100%; cursor: pointer; }
+  .boton:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--terra-osc); }
+  .nota { font-size: 14.5px; color: var(--suave); }
+  .term { background: var(--term); border-radius: 14px; overflow: hidden; margin: 12px 0 0; box-shadow: 0 6px 20px rgba(30,20,15,.22); }
+  .term .barra { display: flex; align-items: center; gap: 7px; padding: 10px 14px; background: #2A2724; font: 12.5px var(--mono); color: #9E978C; }
+  .term .barra i { width: 11px; height: 11px; border-radius: 50%; display: inline-block; } .term .barra span { margin-left: 8px; }
+  .term pre { margin: 0; padding: 14px 16px 16px; overflow-x: auto; font: 14px/1.7 var(--mono); color: #E8E2D6; white-space: pre-wrap; word-break: break-word; }
+  .term.largo pre { max-height: 420px; overflow-y: auto; }
+  .term .p { color: var(--terra); }
+  .term .ag { color: var(--terra); font-weight: 600; }
+  .sis { display: inline-block; font: 600 12px/1 var(--mono); letter-spacing: .06em; color: var(--terra-osc); background: var(--rosa); padding: 6px 10px; border-radius: 999px; margin: 14px 0 0; }
+  .copiar { margin-top: 10px; display: inline-flex; gap: 8px; align-items: center; cursor: pointer; border: 1px solid var(--linea); background: #fff; color: var(--tinta); border-radius: 999px; padding: 8px 14px; font: 600 14px var(--sans); }
+  .acciones { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 4px; }
+  .acciones a { font: 600 14px var(--sans); }
+  .rondas { display: grid; gap: 10px; margin: 12px 0 0; }
+  .ronda { display: flex; gap: 14px; background: #fff; border: 1px solid var(--linea); border-radius: 14px; padding: 12px 14px; }
+  .ronda .n { flex: none; font-size: 26px; line-height: 1.1; width: 32px; }
+  .ronda b { color: var(--tinta); }
+  .seccion { margin: 44px 0 0; } .seccion h2 { font-size: 32px; }
+  details { background: var(--carta); border: 1px solid var(--linea); border-radius: 14px; padding: 14px 16px; margin: 10px 0; }
+  summary { cursor: pointer; font-weight: 700; color: var(--tinta); } details p { margin: 10px 0 0; }
+  code { font: 14px var(--mono); background: #fff; border: 1px solid var(--linea); border-radius: 6px; padding: 1px 6px; }
+  .loop { display: block; background: var(--rosa); border: 1px solid #EBC3B3; border-left: 6px solid var(--terra); border-radius: 14px;
+          padding: 14px 16px; margin: 0 0 30px; font-size: 16px; color: var(--tinta); text-decoration: none; }
+  .loop b { color: var(--terra-osc); } .loop span { display: block; margin-top: 6px; font-weight: 700; color: var(--terra-osc); }
+  .imperio { margin: 48px 0 0; padding: 26px 22px 24px; border-radius: 22px; background: var(--tinta); color: #E8E2D6; }
+  .imperio h2 { color: #fff; font-size: 34px; margin-top: 0; } .imperio h2 em { color: var(--terra); }
+  .imperio p { margin: 0 0 14px; } .imperio b { color: #fff; }
+  .imperio ul { list-style: none; padding: 0; margin: 0 0 18px; display: grid; gap: 8px; }
+  .imperio li { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 10px 14px; }
+  .imperio .cifra { font: 400 26px/1.25 var(--serif); color: #fff; margin: 6px 0 16px; }
+  .imperio .cifra em { color: var(--terra); }
+  .imperio .boton { margin-bottom: 8px; } .imperio .nota { color: #B9B2A6; }
+  footer { margin-top: 52px; padding-top: 22px; border-top: 1px solid var(--linea); font-size: 15px; color: var(--suave); }
+  footer a { color: var(--tinta); font-weight: 700; text-decoration: none; } footer em { font-family: var(--serif); font-size: 19px; color: var(--terra); }
+
+  .paso .foto { margin: 14px 0 6px; }
+  .num.osc { background: var(--tinta); box-shadow: 0 2px 0 #000; }
+  .mania { display: block; font: 600 12.5px/1.2 var(--mono); letter-spacing: .06em; color: var(--suave); text-transform: uppercase; margin: 6px 0 0; }
+  .paso h2 + .mania { margin-top: -4px; }
+  .ronda code { font-size: 13px; }
+  ol.simple { margin: 0 0 12px; padding-left: 22px; } ol.simple li { margin: 6px 0; }
+  .once { gap: 6px; } .once .ronda { padding: 8px 12px; gap: 10px; font-size: 15px; line-height: 1.45; }
+  .once .ronda .n { font-size: 17px; width: 22px; line-height: 1.5; color: var(--terra-osc); font-weight: 700; }
+</style>
+<style>
+  .forma { margin: 0 0 22px; padding: 18px 18px 16px; background: #fff; border: 1px solid var(--linea); border-radius: 18px; }
+  .forma h3 { margin: 0 0 6px; font: 400 26px/1.15 var(--serif); color: var(--tinta); }
+  .forma h3 b { font: 700 14px/1 var(--mono); color: #fff; background: var(--terra); border-radius: 999px; padding: 5px 10px; margin-right: 8px; vertical-align: 4px; }
+  .forma p { margin: 0 0 10px; }
+  .chip { display: inline-block; font: 600 12px/1 var(--mono); letter-spacing: .04em; color: var(--tinta); background: #fff; border: 1px solid var(--linea); border-radius: 999px; padding: 6px 10px; margin: 4px 6px 0 0; }
+  .tabla { width: 100%; border-collapse: collapse; margin: 10px 0 0; font-size: 15px; background: #fff; border-radius: 12px; overflow: hidden; }
+  .tabla td { border-top: 1px solid var(--linea); padding: 9px 12px; vertical-align: top; } .tabla tr:first-child td { border-top: 0; }
+  .tabla td:first-child { font: 600 14px var(--mono); color: var(--terra-osc); white-space: nowrap; }
+</style>
+</head>
+<body>
+<main>
+
+  <div class="cabeza">
+    <img src="img/mascota-regalo.png" alt="">
+    <span class="etiqueta">GRATIS · EN ESPAÑOL</span>
+  </div>
+
+  <h1>Tu agente de <em>reels virales</em></h1>
+  <p class="bajada">Claude estudia los reels que más pegan en tu nicho: <strong>los descarga, transcribe cada palabra, mira lo que pasa en pantalla cada 0,3 segundos y los desarma en formatos</strong>. Con eso armas un agente que entiende qué hace viral un reel y te escribe los tuyos.</p>
+
+  <div class="rondas once">
+    <div class="ronda"><span class="n">1</span><div><b>Busca y descarga</b> los mejores reels de tu nicho.</div></div>
+    <div class="ronda"><span class="n">2</span><div><b>Los ve cuadro por cuadro</b> y transcribe cada palabra.</div></div>
+    <div class="ronda"><span class="n">3</span><div><b>Los desarma:</b> el gancho, los cortes y el final, y los convierte en formatos.</div></div>
+  </div>
+
+  <a class="loop" href="#imperio">🚀 <b>Los agentes de IA con los que hago cosas como esta les están sumando entre 5.000 y 10.000 dólares al mes a los clientes con los que trabajo.</b> Están dentro de Imperio, para multiplicar las ventas de los negocios.<span>Al final te cuento cómo funciona ↓</span></a>
+
+  <ul class="avisos">
+    <li>💳 <b>Solo pagas Claude Pro</b> (unos 20 dólares al mes). Las herramientas son gratis: yt-dlp para descargar, ffmpeg para sacar los cuadros y Whisper para transcribir. Claude te las instala.</li>
+    <li>💻 <b>Desde el computador</b>, Windows o Mac. Estudiar 20 reels toma una tarde.</li>
+    <li>📚 <b>Es para estudiar:</b> no vuelvas a publicar los videos de otros ni uses partes de ellos.</li>
+  </ul>
+
+
+  <section class="paso">
+    <div class="num">1</div>
+    <h2>Ten tu cuenta de <em>Claude</em> con plan Pro</h2>
+    <p>Claude Code viene con el plan <b>Pro</b> (unos 20 dólares al mes). El plan gratis no lo incluye. Si ya pagas Pro o Max, salta al paso 2.</p>
+    <a class="boton" href="https://claude.com/pricing" target="_blank" rel="noopener">Ver planes de Claude →</a>
+  </section>
+
+  <section class="paso">
+    <div class="num">2</div>
+    <h2>Instala <em>Claude Code</em></h2>
+    <p>Escribe <b>terminal</b> en el buscador de tu computador y ábrela. Pega el comando de tu sistema y dale Enter. No muestra avance mientras descarga: espera a que termine.</p>
+    <span class="sis">WINDOWS</span>
+    <div class="term"><div class="barra"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span>Windows PowerShell</span></div><pre id="winst">irm https://claude.ai/install.ps1 | iex</pre></div><button class="copiar" type="button" data-copiar-de="winst">📋 Copiar</button>
+    <span class="sis">MAC</span>
+    <div class="term"><div class="barra"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span>Terminal</span></div><pre id="macinst">curl -fsSL https://claude.ai/install.sh | bash</pre></div><button class="copiar" type="button" data-copiar-de="macinst">📋 Copiar</button>
+    <p class="nota" style="margin-top:12px">Cuando termine, cierra la terminal y vuelve a abrirla. Los comandos son los de la <a href="https://code.claude.com/docs/en/setup" target="_blank" rel="noopener">página oficial de instalación</a>. ¿Prefieres sin terminal? La <a href="https://claude.ai/download" target="_blank" rel="noopener">app de Claude para el computador</a> trae Claude Code en la pestaña <b>Code</b>.</p>
+  </section>
+
+  <section class="paso">
+    <div class="num">3</div>
+    <h2>Escribe <em>claude</em> e inicia sesión</h2>
+    <p>Crea una carpeta en <b>Documentos</b> llamada <code>mis-reels</code>. Luego, en la terminal:</p>
+    <span class="sis">WINDOWS</span>
+    <div class="term"><div class="barra"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span>Windows PowerShell</span></div><pre id="wincd">cd Documentos\mis-reels
+claude</pre></div><button class="copiar" type="button" data-copiar-de="wincd">📋 Copiar</button>
+    <span class="sis">MAC</span>
+    <div class="term"><div class="barra"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span>Terminal</span></div><pre id="maccd">cd ~/Documents/mis-reels
+claude</pre></div><button class="copiar" type="button" data-copiar-de="maccd">📋 Copiar</button>
+    <p class="nota" style="margin-top:12px">La primera vez te abre el navegador para entrar con tu cuenta de Claude. Entras, vuelves a la terminal y ya está Claude Code esperando tu mensaje. Si te pide permiso para crear archivos o instalar algo, acéptalo: así trabaja.</p>
+  </section>
+
+
+  <section class="paso">
+    <div class="num">4</div>
+    <h2>Instala <em>las herramientas</em></h2>
+    <p>Dentro de Claude Code pega esto:</p>
+    <div class="term"><div class="barra"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span>Claude Code</span></div><pre id="v1">Instálame yt-dlp, ffmpeg y Whisper en este computador, revisa que funcionen y avísame cuando estén listos.</pre></div><button class="copiar" type="button" data-copiar-de="v1">📋 Copiar</button>
+    <p class="nota" style="margin-top:12px">Si te pide permiso para instalar algo, acéptalo.</p>
+  </section>
+
+  <section class="paso">
+    <div class="num">5</div>
+    <h2>Junta los reels <em>que más pegan</em></h2>
+    <p>Copia los links de los 10 a 20 reels con más vistas de tu nicho (Instagram, TikTok o YouTube Shorts) y pégalos en un archivo <code>links.txt</code> dentro de tu carpeta. Luego:</p>
+    <div class="term"><div class="barra"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span>Claude Code</span></div><pre id="v2">Descarga todos los videos de links.txt en una carpeta llamada reels. Si alguno no baja, dime cuál y sigue con el resto.</pre></div><button class="copiar" type="button" data-copiar-de="v2">📋 Copiar</button>
+    <p class="nota" style="margin-top:12px">Instagram a veces pide iniciar sesión para descargar. Si falla, prueba con TikTok o YouTube Shorts, o descarga tú los videos desde el celular y ponlos en la carpeta.</p>
+  </section>
+
+  <section class="paso">
+    <div class="num">6</div>
+    <h2>Que los vea <em>cuadro por cuadro</em></h2>
+    <div class="term"><div class="barra"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span>Claude Code</span></div><pre id="v3">Para cada video de la carpeta reels: transcribe cada palabra con Whisper, con el segundo exacto en que se dice, y saca un cuadro cada 0,3 segundos con ffmpeg. Luego mira los cuadros y escribe qué pasa en pantalla en cada momento: textos, cortes, cambios de plano y efectos. Guarda todo en una carpeta llamada estudio.</pre></div><button class="copiar" type="button" data-copiar-de="v3">📋 Copiar</button>
+    <p class="nota" style="margin-top:12px">Esta es la parte que nadie hace: entender no solo lo que dicen, sino lo que se ve.</p>
+  </section>
+
+  <section class="paso">
+    <div class="num">7</div>
+    <h2>Desármalos <em>en formatos</em></h2>
+    <div class="term"><div class="barra"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span>Claude Code</span></div><pre id="v4">Con todo lo de la carpeta estudio, desarma cada reel: el gancho de los primeros 3 segundos, cada cuánto hay un corte, cómo está armado el argumento y cómo cierra. Agrupa los que se parecen en formatos, cada uno con su plantilla y un ejemplo, y dime qué tienen en común los que más vistas tienen.</pre></div><button class="copiar" type="button" data-copiar-de="v4">📋 Copiar</button>
+  </section>
+
+  <section class="paso">
+    <div class="num">8</div>
+    <h2>Conviértelo en <em>tu agente</em></h2>
+    <div class="term"><div class="barra"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span>Claude Code</span></div><pre id="v5">Con los formatos que encontraste, crea un subagente llamado analista-viral: que sepa estos patrones, que pueda estudiar reels nuevos con el mismo método y que me escriba guiones para mi negocio, [tu negocio], siguiendo los formatos que más pegan. Guárdalo para usarlo siempre.</pre></div><button class="copiar" type="button" data-copiar-de="v5">📋 Copiar</button>
+    <p style="margin-top:14px">Desde ahí, cada vez que lo necesites:</p>
+    <div class="term"><div class="barra"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span>Claude Code</span></div><pre id="v6">Usa el analista-viral para escribirme 3 guiones sobre [tema], con el formato que mejor le funcione a mi nicho.</pre></div><button class="copiar" type="button" data-copiar-de="v6">📋 Copiar</button>
+    <p class="nota" style="margin-top:12px">Claude Code guarda tus subagentes en la carpeta <code>.claude/agents</code>. Repite los pasos 5 a 7 cada mes con los reels nuevos y tu agente se mantiene al día.</p>
+  </section>
+
+  <section class="seccion">
+    <h2>Preguntas <em>frecuentes</em></h2>
+    <details>
+      <summary>¿Cuánto me cuesta?</summary>
+      <p>Solo Claude Pro, unos 20 dólares al mes. yt-dlp, ffmpeg y Whisper son gratis.</p>
+    </details>
+    <details>
+      <summary>¿Puedo descargar reels de otros?</summary>
+      <p>Úsalos solo para estudiarlos en tu computador. No los vuelvas a publicar ni uses partes de ellos, y revisa las condiciones de cada red social.</p>
+    </details>
+    <details>
+      <summary>¿Sirve también para anuncios?</summary>
+      <p>Sí. Haz lo mismo con los anuncios de tu competencia y le pides formatos de anuncio en vez de reels.</p>
+    </details>
+    <details>
+      <summary>¿Lo puedo hacer sin instalar nada?</summary>
+      <p>Sí, con una herramienta de pago que se conecta a Claude. <a href="https://diegodoc1111.github.io/analiza-redes/" target="_blank" rel="noopener">Aquí te explico cómo</a>.</p>
+    </details>
+  </section>
+
+
+  <section class="imperio" id="imperio">
+    <h2>Deja de hacerlo todo <em>a mano</em></h2>
+    <p class="cifra">Haz en <em>3 días</em> el trabajo de todo un mes.</p>
+    <p>Ten un equipo de marketing de 4 personas trabajando para ti por unos <b>$25 al mes</b>: <b>los agentes Imperio</b>. Te hacen:</p>
+    <ul>
+      <li>✍️ El contenido y los carruseles.</li>
+      <li>📣 Los anuncios y los VSL.</li>
+      <li>🖥️ Las páginas web.</li>
+      <li>📊 Las campañas en Meta.</li>
+      <li>💬 Y hasta responden tus mensajes.</li>
+    </ul>
+    <p><b>Sin saber de tecnología: solo copias, pegas y facturas.</b></p>
+    <p>Son los mismos agentes que hoy les suman <b>entre $5.000 y $10.000 dólares extra al mes</b> a los negocios con los que trabajo: automatizan todo el marketing y hacen el trabajo de 4 personas.</p>
+    <a class="boton" href="https://ig.me/m/soydiegoosorio" target="_blank" rel="noopener">Escríbeme “IMPERIO” por Instagram →</a>
+    <p class="nota">Te cuento cómo funciona y si encaja con tu negocio.</p>
+  </section>
+
+
+  <footer>
+    <p>Guía de <a href="https://instagram.com/soydiegoosorio">@soydiegoosorio</a>. Esta guía también está en <a href="https://github.com/diegodoc1111/agente-reels-virales">GitHub</a>.</p>
+    <p><em>Úsalo y compártelo.</em></p>
+  </footer>
+
+</main>
+<script>
+  function copiarTexto(t, boton) {
+    var listo = function () { var o = boton.textContent; boton.textContent = "✅ Copiado"; setTimeout(function () { boton.textContent = o; }, 1800); };
+    var respaldo = function () {
+      var a = document.createElement("textarea"); a.value = t; a.setAttribute("readonly", "");
+      a.style.position = "fixed"; a.style.top = "-1000px"; document.body.appendChild(a); a.select();
+      var ok = false; try { ok = document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(a);
+      if (ok) { listo(); } else { boton.textContent = "Mantén presionado el texto para copiarlo"; }
+    };
+    if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(t).then(listo, respaldo); } else { respaldo(); }
+  }
+  document.querySelectorAll("[data-copiar-de]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var el = document.getElementById(b.getAttribute("data-copiar-de"));
+      var t = el.innerText.replace(/^❯\s*/, "");
+      copiarTexto(t, b);
+    });
+  });
+</script>
+
+</body>
+</html>
